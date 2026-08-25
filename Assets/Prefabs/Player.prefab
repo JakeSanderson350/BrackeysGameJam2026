@@ -31,7 +31,8 @@ Transform:
   m_LocalPosition: {x: -0.15, y: -3.41, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 3396967789886723271}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &2905234678411111959
@@ -101,6 +102,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3133fcc78ee59ce4f9a3c708ada0dfcf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hand: {fileID: 0}
+  cardToDiscard: 0
 --- !u!114 &3408402157700921308
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -114,3 +117,50 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hand: []
+--- !u!1 &4256286112633650065
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3396967789886723271}
+  - component: {fileID: 5506128682882429106}
+  m_Layer: 0
+  m_Name: HandVisuals
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3396967789886723271
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4256286112633650065}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2822352745221267644}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5506128682882429106
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4256286112633650065}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 014883a5654b6734ea5d2df19c4f0a29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerHand: {fileID: 3408402157700921308}
+  cardVisualBase: {fileID: 3156557946344556817, guid: 5f70d974999fab34895d827ca6233e1e, type: 3}
+  width: 3

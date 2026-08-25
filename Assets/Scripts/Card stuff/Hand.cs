@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,9 +7,13 @@ public class Hand : MonoBehaviour
 {
     [SerializeField] private List<Card> hand;
 
+    public event Action<List<Card>> OnHandChanged;
+
     public void PickupCard(Card _card)
     {
         hand.Add(_card);
+
+        OnHandChanged?.Invoke(hand);
     }
 
     public void DiscardCard(int ind)
@@ -17,5 +22,7 @@ public class Hand : MonoBehaviour
             return;
 
         hand.RemoveAt(ind);
+
+        OnHandChanged?.Invoke(hand);
     }
 }

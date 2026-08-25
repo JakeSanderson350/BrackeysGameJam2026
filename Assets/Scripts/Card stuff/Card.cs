@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System;
 using UnityEngine;
 
@@ -9,8 +10,8 @@ using UnityEngine;
 
 public enum Suit
 {
-    SPADE = 0,
-    CLUB,
-    HEART,
-    DIAMOND
+    CLUB = 0,
+    DIAMOND,
+    SPADE,
+    HEART
 }
