@@ -6,7 +6,7 @@ public class Deck : MonoBehaviour
     [SerializeField] private List<Card> deck;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Init()
+    public void InitDeck()
     {
         deck = new List<Card>();
 
@@ -17,6 +17,16 @@ public class Deck : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public Card DrawCard()
+    {
+        int ind = Random.Range(0, deck.Count);
+
+        Card cardToReturn = deck[ind];
+        deck.Remove(cardToReturn);
+
+        return cardToReturn;
     }
 
     private void InitStandardDeck()
