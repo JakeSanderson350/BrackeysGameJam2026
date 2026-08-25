@@ -10,4 +10,12 @@ public class Hand : MonoBehaviour
     {
         hand.Add(_card);
     }
+
+    public void DiscardCard(int ind)
+    {
+        if (ind >= hand.Count)
+            return;
+
+        hand.RemoveAt(ind);
+    }
 }

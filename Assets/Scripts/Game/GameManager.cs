@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private List<Hand> handsInPlay;
 
     [Header("Game Objects")]
-    [SerializeField] private Deck baseDeck;
+    [SerializeField] public Deck baseDeck;
     [SerializeField] private GameObject opponentPrefab;
     [SerializeField] private GameObject playerPrefab;
 
