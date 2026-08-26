@@ -7,10 +7,16 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager inst;
 
-    private Player player;
-    private TurnType gameTurn;
+    // Tracking players
+    private Player player; // irl human being not ai generated
+    [SerializeField] private TurnType gameTurn;
+    [SerializeField] private int playerInTurn;
 
-    [SerializeField] private CardGameSettings gameSettings;
+    // Pot
+    [SerializeField] private int totalPot = 0;
+    [SerializeField] private int currentBet;
+
+    [SerializeField] public CardGameSettings gameSettings;
     [SerializeField] private List<HandController> handsInPlay;
 
     [Header("Game Objects")]
@@ -41,7 +47,30 @@ public class GameManager : MonoBehaviour
 
         baseDeck.InitDeck();
         gameTurn = TurnType.ANTE;
-        //DealHands();
+        //Prolly start coroutine to wait for opps
+
+        playerInTurn = 0;
+        currentBet = gameSettings.ante;
+        OnStartPlayerTurn?.Invoke(playerInTurn, gameTurn);
+    }
+
+    private void OnEnable()
+    {
+        HandController.OnCall += PlayerCall;
+        HandController.OnRaise += PlayerRaise;
+        HandController.OnPass += PlayerPass;
+    }
+
+    private void OnDisable()
+    {
+        HandController.OnCall -= PlayerCall;
+        HandController.OnRaise -= PlayerRaise;
+        HandController.OnPass -= PlayerPass;
+    }
+
+    public int GetCurrentBet()
+    {
+        return currentBet;
     }
 
     // Update is called once per frame
@@ -75,6 +104,28 @@ public class GameManager : MonoBehaviour
         player.InitController();
     }
 
+    private void StartNextTurnType()
+    {
+        switch (gameTurn)
+        {
+            case TurnType.DEAL:
+                DealHands();
+                break;
+
+            case TurnType.FIRST_BETS:
+
+                break;
+
+            case TurnType.DISCARD:
+
+                break;
+
+            case TurnType.SECOND_BETS:
+
+                break;
+        }
+    }
+
     private void DealHands()
     {
         for (int i = 0; i < handsInPlay.Count; i++)
@@ -83,6 +134,38 @@ public class GameManager : MonoBehaviour
             {
                 handsInPlay[i].hand.PickupCard(baseDeck.DrawCard());
             }
+        }
+    }
+
+    private void PlayerCall(HandController player)
+    {
+        IteratePlayerInTurn();
+        totalPot += currentBet;
+
+        OnStartPlayerTurn?.Invoke(playerInTurn, gameTurn);
+    }
+
+    private void PlayerRaise(HandController player, int rasieAmount)
+    {
+
+    }
+
+    private void PlayerPass(HandController player)
+    {
+        IteratePlayerInTurn();
+
+        OnStartPlayerTurn?.Invoke(playerInTurn, gameTurn);
+    }
+
+    private void IteratePlayerInTurn()
+    {
+        playerInTurn++;
+
+        if (playerInTurn > gameSettings.numPlayers - 1)
+        {
+            gameTurn++;
+            playerInTurn = 0;
+            StartNextTurnType();
         }
     }
 }

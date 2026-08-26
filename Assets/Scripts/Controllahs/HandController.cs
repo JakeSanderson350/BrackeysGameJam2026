@@ -6,7 +6,7 @@ public class HandController : MonoBehaviour
 {
     // Id for checking if in turn
     private static int idCounter = 0;
-    private int id;
+    [SerializeField] private int id;
 
     protected TurnType currentTurn;
     protected bool isInTurn = false;
@@ -15,7 +15,9 @@ public class HandController : MonoBehaviour
     [SerializeField] public Hand hand;
     [SerializeField] public int money;
 
-    public event Action<HandController> OnFold;
+    public static event Action<HandController> OnCall;
+    public static event Action<HandController, int> OnRaise; // int = amount raised
+    public static event Action<HandController> OnPass; // Used when player is out
 
     [Header("Debug")]
     [SerializeField] int cardToDiscard;
@@ -46,6 +48,7 @@ public class HandController : MonoBehaviour
     {
         hand = GetComponent<Hand>();
         id = idCounter++;
+        money = GameManager.inst.gameSettings.startingCash;
 
         // Add hand to game manager
         GameManager.inst.AddHand(this);
@@ -59,7 +62,10 @@ public class HandController : MonoBehaviour
     private void DoTurn(int _id, TurnType turnType)
     {
         if (_id != id)
+        {
+            isInTurn = false;
             return;
+        }
 
         isInTurn = true;
         currentTurn = turnType;
@@ -73,11 +79,25 @@ public class HandController : MonoBehaviour
 
     public void Call()
     {
-        Debug.Log(" fuckin ell");
+        if ((money - GameManager.inst.GetCurrentBet()) < 0)
+        {
+            // Some sorta feedback to say the player cant call
+            return;
+        }
+
+        money = Math.Max(0, money - GameManager.inst.GetCurrentBet());
+        isInTurn = false;
+
+        OnCall.Invoke(this);
     }
 
     public void Fold()
     {
 
+    }
+
+    public void Pass()
+    {
+        OnPass?.Invoke(this);
     }
 }

@@ -6,4 +6,5 @@ public class CardGameSettings : ScriptableObject
     public int numPlayers = 4;
     public int cardsToDeal = 2;
     public int ante = 100;
+    public int startingCash = 10000;
 }
