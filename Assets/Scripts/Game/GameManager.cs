@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Unity.Collections;
 using UnityEngine;
@@ -6,15 +7,18 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager inst;
 
+    private Player player;
+    private TurnType gameTurn;
+
     [SerializeField] private CardGameSettings gameSettings;
-    [SerializeField] private List<Hand> handsInPlay;
+    [SerializeField] private List<HandController> handsInPlay;
 
     [Header("Game Objects")]
     [SerializeField] public Deck baseDeck;
     [SerializeField] private GameObject opponentPrefab;
     [SerializeField] private GameObject playerPrefab;
 
-    private Player player;
+    public static event Action<int, TurnType> OnStartPlayerTurn; // playerID of player which turn it is, What type of turn it is
 
     private void Awake()
     {
@@ -36,7 +40,8 @@ public class GameManager : MonoBehaviour
         InitPlayer();
 
         baseDeck.InitDeck();
-        DealHands();
+        gameTurn = TurnType.ANTE;
+        //DealHands();
     }
 
     // Update is called once per frame
@@ -45,7 +50,7 @@ public class GameManager : MonoBehaviour
         
     }
 
-    public void AddHand(Hand _hand)
+    public void AddHand(HandController _hand)
     {
         handsInPlay.Add(_hand);
     }
@@ -76,8 +81,18 @@ public class GameManager : MonoBehaviour
         {
             for (int j = 0; j < gameSettings.cardsToDeal; j++)
             {
-                handsInPlay[i].PickupCard(baseDeck.DrawCard());
+                handsInPlay[i].hand.PickupCard(baseDeck.DrawCard());
             }
         }
     }
+}
+
+public enum TurnType
+{
+    ANTE = 0,
+    DEAL,
+    FIRST_BETS,
+    DISCARD,
+    SECOND_BETS,
+    SHOWDOWN
 }

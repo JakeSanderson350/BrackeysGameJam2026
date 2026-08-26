@@ -18,6 +18,8 @@ public class PlayerHandVisual : MonoBehaviour
             return;
 
         playerHand.OnHandChanged += UpdateVisual;
+
+        handVisual = new List<GameObject>();
     }
 
     private void OnDisable()
@@ -31,15 +33,12 @@ public class PlayerHandVisual : MonoBehaviour
     private void UpdateVisual(List<Card> _cards)
     {
         // Delete old models
-        if (handVisual != null)
+        for (int i = 0; i < handVisual.Count; i++)
         {
-            for (int i = 0; i < handVisual.Count; i++)
-            {
-                GameObject obj = handVisual[i];
-                handVisual.Remove(obj);
-                Destroy(obj);
-            }
+            GameObject obj = handVisual[i];
+            Destroy(obj);
         }
+        handVisual.Clear();        
 
         // Create new models and space accordingly
         handVisual = new List<GameObject>();
@@ -51,12 +50,10 @@ public class PlayerHandVisual : MonoBehaviour
             CardVisual cardVis = newCard.GetComponent<CardVisual>();
             cardVis.UpdateCardVisual(_cards[i]);
 
-            Debug.Log((float)i / (float)_cards.Count);
-
             float cardX = Mathf.Lerp(-width / 2.0f, width / 2.0f, (float)i / (float)_cards.Count);
-            float cardZ = Mathf.Lerp(0.0f, 1.0f, (float)i / (float)_cards.Count);
+            float cardZ = Mathf.Lerp(1.0f, 0.0f, (float)i / (float)_cards.Count);
 
-            cardVisualBase.transform.position = new Vector3(cardX, 0.0f, cardZ);
+            cardVis.transform.position = new Vector3(cardX, cardVis.transform.position.y, cardZ);
 
             handVisual.Add(newCard);
         }

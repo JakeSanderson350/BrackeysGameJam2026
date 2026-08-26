@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1996290cb4d2a54cb497c90881fbab8, type: 3}
   m_Name: DefaultSettings
   m_EditorClassIdentifier: 
-  numPlayers: 4
-  cardsToDeal: 2
+  numPlayers: 5
+  cardsToDeal: 5
+  ante: 100
