@@ -6,7 +6,7 @@ public class HandController : MonoBehaviour
 {
     // Id for checking if in turn
     private static int idCounter = 0;
-    [SerializeField] private int id;
+    [SerializeField] protected int id;
 
     protected TurnType currentTurn;
     protected bool isInTurn = false;
@@ -74,21 +74,38 @@ public class HandController : MonoBehaviour
     // Bet Phase
     public void Raise(int _raise)
     {
+        if ((money - _raise) < 0)
+        {
+            // Some sorta feedback to say the player cant raise
+            return;
+        }
 
+        int amountRaised = Math.Min(_raise, GameManager.inst.GetCurrentMaxRaise());
+
+        money = Math.Max(0, money - amountRaised);
+        isInTurn = false;
+
+        OnRaise?.Invoke(this, amountRaised);
     }
 
     public void Call()
     {
-        if ((money - GameManager.inst.GetCurrentBet()) < 0)
+        if (money <= 0)
         {
             // Some sorta feedback to say the player cant call
+            Debug.Log("No money :(");
             return;
+        }
+        else if ((money - GameManager.inst.GetCurrentBet()) < 0 && (money - GameManager.inst.GetCurrentBet()) > -GameManager.inst.GetCurrentBet())
+        {
+            // All in case
+            Debug.Log("Shuuuvvvv");
         }
 
         money = Math.Max(0, money - GameManager.inst.GetCurrentBet());
         isInTurn = false;
 
-        OnCall.Invoke(this);
+        OnCall?.Invoke(this);
     }
 
     public void Fold()

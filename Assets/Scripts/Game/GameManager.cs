@@ -7,14 +7,18 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager inst;
 
+    public const int MAX_RAISE_MULT = 3;
+
     // Tracking players
     private Player player; // irl human being not ai generated
+    private List<Opponent> opponents;
     [SerializeField] private TurnType gameTurn;
     [SerializeField] private int playerInTurn;
 
     // Pot
     [SerializeField] private int totalPot = 0;
     [SerializeField] private int currentBet;
+    [SerializeField] private int currentMaxRaise;
 
     [SerializeField] public CardGameSettings gameSettings;
     [SerializeField] private List<HandController> handsInPlay;
@@ -73,6 +77,11 @@ public class GameManager : MonoBehaviour
         return currentBet;
     }
 
+    public int GetCurrentMaxRaise()
+    {
+        return currentMaxRaise;
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -86,10 +95,13 @@ public class GameManager : MonoBehaviour
 
     private void InitOpponents()
     {
+        opponents = new List<Opponent>();
+
         for (int i = 0; i < gameSettings.numPlayers - 1; i++)
         {
             GameObject newOpponent = Instantiate(opponentPrefab);
             newOpponent.GetComponent<Opponent>().InitController();
+            opponents.Add(newOpponent.GetComponent<Opponent>());
 
             // TODO
             // something that spawns them in spaced out around the table
@@ -113,7 +125,8 @@ public class GameManager : MonoBehaviour
                 break;
 
             case TurnType.FIRST_BETS:
-
+                currentBet = gameSettings.firstBetMin;
+                currentMaxRaise = MAX_RAISE_MULT * currentBet;
                 break;
 
             case TurnType.DISCARD:
@@ -139,15 +152,19 @@ public class GameManager : MonoBehaviour
 
     private void PlayerCall(HandController player)
     {
-        IteratePlayerInTurn();
         totalPot += currentBet;
-
+        
+        IteratePlayerInTurn();
         OnStartPlayerTurn?.Invoke(playerInTurn, gameTurn);
     }
 
-    private void PlayerRaise(HandController player, int rasieAmount)
+    private void PlayerRaise(HandController player, int raiseAmount)
     {
-
+        totalPot += raiseAmount;
+        currentBet = raiseAmount;
+        
+        IteratePlayerInTurn();
+        OnStartPlayerTurn?.Invoke(playerInTurn, gameTurn);
     }
 
     private void PlayerPass(HandController player)
